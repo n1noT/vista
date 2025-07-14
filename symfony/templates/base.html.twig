@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}{% endblock %}</title>
+        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
+        {% block stylesheets %}
+        {% endblock %}
+
+        {% block javascripts %}
+            {% block importmap %}{{ importmap('app') }}{% endblock %}
+        {% endblock %}
+    </head>
+    <body>
+        {% block header %}
+            <header class="header">
+                <h1>Symfony Base Application</h1>
+                <nav class="nav">
+                    <ul>
+                        <li><a href="{{ path('app_index') }}">{{ 'IDS_HOME' | trans}}</a></li>
+                        {% if app.user %}
+                            {% if is_granted('ROLE_ADMIN') %}
+                                <li><a href="{{ path('app_admin_dashboard') }}">{{ 'IDS_ADMIN_DASHBOARD' | trans}}</a></li>
+                            {% endif %}
+                            <li><a href="{{ path('app_logout') }}">{{ 'IDS_LOGOUT' | trans}}</a></li>
+                        {% else %}
+                            <li><a href="{{ path('app_login') }}">{{ 'IDS_LOGIN' | trans}}</a></li>
+                            <li><a href="{{ path('app_register') }}">{{ 'IDS_REGISTER' | trans}}</a></li>
+                        {% endif %}
+                        <li>
+                            <div class="theme-toggle">
+                                <input type="checkbox" data-controller="theme" id="theme-toggle" class="theme-toggle-input" />
+                                <label for="theme-toggle" class="theme-toggle-label">
+                                    <span class="theme-icon-light">
+                                        <svg class="icon" width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M13.9717 1.55957C14.4413 -0.519541 17.4034 -0.519541 17.8731 1.55957L18.6602 5.04394C18.965 6.39086 20.5119 7.03138 21.6797 6.29394L24.6992 4.38672C26.5014 3.24886 28.5968 5.34335 27.459 7.14551L25.5518 10.166C24.8143 11.334 25.4543 12.8802 26.8018 13.1846L30.2861 13.9717C32.3646 14.4417 32.3646 17.4031 30.2861 17.873L26.8018 18.6602C25.4543 18.9645 24.8142 20.5117 25.5518 21.6797L27.459 24.6992C28.5962 26.5012 26.5012 28.5962 24.6992 27.459L21.6797 25.5518C20.5117 24.8142 18.9645 25.4543 18.6602 26.8018L17.8731 30.2861C17.4031 32.3646 14.4417 32.3646 13.9717 30.2861L13.1846 26.8018C12.8802 25.4543 11.334 24.8143 10.166 25.5518L7.14551 27.459C5.34336 28.5968 3.24887 26.5014 4.38673 24.6992L6.29395 21.6797C7.03139 20.5119 6.39086 18.965 5.04395 18.6602L1.55958 17.873C-0.519534 17.4034 -0.519534 14.4413 1.55958 13.9717L5.04395 13.1846C6.39071 12.8799 7.03083 11.3338 6.29395 10.166L4.38673 7.14551C3.24866 5.34327 5.34328 3.24865 7.14551 4.38672L10.166 6.29394C11.3338 7.03083 12.8799 6.3907 13.1846 5.04394L13.9717 1.55957ZM15.9229 8.92285C12.0569 8.92285 8.92286 12.0569 8.92286 15.9229C8.92311 19.7886 12.057 22.9229 15.9229 22.9229C19.7885 22.9226 22.9226 19.7885 22.9229 15.9229C22.9229 12.057 19.7886 8.9231 15.9229 8.92285Z"/>
+                                        </svg>
+                                    </span>
+                                    <span class="theme-icon-dark">
+                                        <svg class="icon" width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M16.0654 3.87882e-05C13.5732 2.19891 12 5.41518 12 9.00004C12 15.6275 17.3726 21 24 21C27.0114 21 29.7612 19.8879 31.8682 18.0557C30.8593 25.9213 24.14 32 16 32C7.16344 32 0 24.8366 0 16C0 7.16348 7.16344 3.87882e-05 16 3.87882e-05C16.0218 3.87882e-05 16.0436 -4.84853e-05 16.0654 3.87882e-05Z"/>
+                                        </svg>
+                                    </span>
+                                </label>
+                            </div>
+                        </li>
+                    </ul>
+                </nav>
+            </header>
+        {% endblock %}
+        {% block body %}{% endblock %}
+    </body>
+</html>

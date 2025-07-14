@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}⛔​ {{ 'IDS_ACCESS_DENIED' | trans }}{% endblock %}
+
+{% block body %}
+    <div class="div-centered min-h-70">
+        <div class="container">
+            <h2>⛔ {{ 'IDS_ACCESS_DENIED' | trans }}</h2>
+            <p>{{ 'IDS_ACCESS_DENIED_MESSAGE' | trans }}</p>
+            <button>
+                <a href="{{ path('app_index') }}">{{ 'IDS_HOME' | trans }}</a>
+            </button>
+        </div>
+    </div>
+{% endblock %}

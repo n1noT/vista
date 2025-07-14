@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Register{% endblock %}
+
+{% block body %}
+<div class="div-centered min-h-70">
+
+    {{ form_errors(registrationForm) }}
+
+    {{ form_start(registrationForm) }}
+        <h2 class="h3 mb-3 font-weight-normal">{{ 'IDS_REGISTER_TITLE' | trans }}</h2>
+        {{ form_row(registrationForm.email) }}
+        {{ form_row(registrationForm.plainPassword, {
+            label: 'IDS_PASSWORD'
+        }) }}
+        {{ form_row(registrationForm.agreeTerms) }}
+
+        <button type="submit" class="btn">{{ 'IDS_REGISTER' | trans }}</button>
+    {{ form_end(registrationForm) }}
+</div>
+{% endblock %}

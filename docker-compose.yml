@@ -1,0 +1,49 @@
+services:
+
+  apache:
+    container_name: apache
+    image: webdevops/php-apache:8.3-alpine
+    ports:
+      - "8080:80"
+    volumes:
+      - ./symfony:/app/symfony
+    environment:
+      - WEB_DOCUMENT_ROOT=/app/symfony/public
+    depends_on:
+      - mysql
+    networks:
+      - network
+
+  mysql:
+    container_name: database
+    image: mysql:8
+    volumes:
+      - database:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    networks:
+      - network
+  
+  phpmyadmin:
+    container_name: phpmyadmin
+    image: phpmyadmin/phpmyadmin
+    environment:
+      PMA_HOST: mysql
+      PMA_USER: ${PMA_USER}
+      PMA_PASSWORD: ${PMA_PASSWORD}
+    ports:
+      - "8070:80"
+    depends_on:
+      - mysql
+    networks:
+      - network
+
+volumes:
+  database:
+
+networks:
+  network:
+    driver: bridge
