@@ -25,6 +25,9 @@ class Season
     #[ORM\Column(nullable: true)]
     private ?\DateTime $endDate = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $label = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -74,6 +77,18 @@ class Season
     public function setEndDate(?\DateTime $endDate): static
     {
         $this->endDate = $endDate;
+
+        return $this;
+    }
+
+    public function getLabel(): ?string
+    {
+        return $this->label;
+    }
+
+    public function setLabel(string $label): static
+    {
+        $this->label = $label;
 
         return $this;
     }
