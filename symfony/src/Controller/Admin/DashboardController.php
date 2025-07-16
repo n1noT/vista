@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller\Admin;
 
+use App\Entity\Club;
 use App\Entity\Competition;
 use App\Entity\CompetitionSeason;
 use App\Entity\Season;
@@ -36,5 +37,7 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Season', 'fas fa-calendar', Season::class);
         yield MenuItem::linkToCrud('Competition', 'fas fa-trophy', Competition::class);
         yield MenuItem::linkToCrud('Competition Season', 'fas fa-map', CompetitionSeason::class);
+        yield MenuItem::linkToCrud('Club', 'fas fa-shield-halved', Club::class);
+
     }
 }
