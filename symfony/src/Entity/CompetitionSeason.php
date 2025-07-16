@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Repository\CompetitionSeasonRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\UniqueConstraint;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -29,6 +31,23 @@ class CompetitionSeason
 
     #[ORM\Column]
     private ?int $total_matchdays = null;
+
+    /**
+     * @var Collection<int, ClubMatchday>
+     */
+    #[ORM\OneToMany(targetEntity: ClubMatchday::class, mappedBy: 'competitionSeason')]
+    private Collection $clubMatchdays;
+
+    public function __construct()
+    {
+        $this->total_matchdays = 20; // Most of the competitions have 20 matchdays so it's set by default
+        $this->clubMatchdays = new ArrayCollection();
+    }
+
+    public function __toString(): string
+    {
+        return \sprintf('%s - %s', $this->competition?->getName() ?? 'Unknown Competition', $this->season?->getLabel() ?? 'Unknown Season');
+    }
 
     public function getId(): ?int
     {
@@ -67,6 +86,36 @@ class CompetitionSeason
     public function setTotalMatchdays(int $total_matchdays): static
     {
         $this->total_matchdays = $total_matchdays;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ClubMatchday>
+     */
+    public function getClubMatchdays(): Collection
+    {
+        return $this->clubMatchdays;
+    }
+
+    public function addClubMatchday(ClubMatchday $clubMatchday): static
+    {
+        if (!$this->clubMatchdays->contains($clubMatchday)) {
+            $this->clubMatchdays->add($clubMatchday);
+            $clubMatchday->setCompetitionSeason($this);
+        }
+
+        return $this;
+    }
+
+    public function removeClubMatchday(ClubMatchday $clubMatchday): static
+    {
+        if ($this->clubMatchdays->removeElement($clubMatchday)) {
+            // set the owning side to null (unless already changed)
+            if ($clubMatchday->getCompetitionSeason() === $this) {
+                $clubMatchday->setCompetitionSeason(null);
+            }
+        }
 
         return $this;
     }

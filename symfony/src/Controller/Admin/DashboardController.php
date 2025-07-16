@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller\Admin;
 
 use App\Entity\Club;
+use App\Entity\ClubMatchday;
 use App\Entity\Competition;
 use App\Entity\CompetitionSeason;
 use App\Entity\Season;
@@ -32,12 +33,18 @@ class DashboardController extends AbstractDashboardController
 
     public function configureMenuItems(): iterable
     {
-        yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
-        yield MenuItem::linkToCrud('User', 'fas fa-user', User::class);
-        yield MenuItem::linkToCrud('Season', 'fas fa-calendar', Season::class);
-        yield MenuItem::linkToCrud('Competition', 'fas fa-trophy', Competition::class);
-        yield MenuItem::linkToCrud('Competition Season', 'fas fa-map', CompetitionSeason::class);
-        yield MenuItem::linkToCrud('Club', 'fas fa-shield-halved', Club::class);
-
+        return [
+            MenuItem::linkToDashboard('Dashboard', 'fa fa-home'),
+            MenuItem::linkToCrud('User', 'fas fa-user', User::class),
+            MenuItem::subMenu('Football', 'fa fa-futbol')->setSubItems(
+                [
+                    MenuItem::linkToCrud('Season', 'fas fa-calendar', Season::class),
+                    MenuItem::linkToCrud('Competition', 'fas fa-trophy', Competition::class),
+                    MenuItem::linkToCrud('Competition Season', 'fas fa-map', CompetitionSeason::class),
+                    MenuItem::linkToCrud('Club', 'fas fa-shield-halved', Club::class),
+                    MenuItem::linkToCrud('Club Matchday', 'fas fa-calendar-alt', ClubMatchday::class),
+                ]
+            ),
+        ];
     }
 }
