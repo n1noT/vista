@@ -1,8 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use App\Repository\SeasonRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: SeasonRepository::class)]
@@ -27,6 +31,22 @@ class Season
 
     #[ORM\Column(length: 255)]
     private ?string $label = null;
+
+    /**
+     * @var Collection<int, CompetitionSeason>
+     */
+    #[ORM\OneToMany(targetEntity: CompetitionSeason::class, mappedBy: 'season')]
+    private Collection $competitionSeasons;
+
+    public function __construct()
+    {
+        $this->competitionSeasons = new ArrayCollection();
+    }
+
+    public function __toString(): string
+    {
+        return $this->label ?? 'Unnamed Season';
+    }
 
     public function getId(): ?int
     {
@@ -89,6 +109,36 @@ class Season
     public function setLabel(string $label): static
     {
         $this->label = $label;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, CompetitionSeason>
+     */
+    public function getCompetitionSeasons(): Collection
+    {
+        return $this->competitionSeasons;
+    }
+
+    public function addCompetitionSeason(CompetitionSeason $competitionSeason): static
+    {
+        if (!$this->competitionSeasons->contains($competitionSeason)) {
+            $this->competitionSeasons->add($competitionSeason);
+            $competitionSeason->setSeason($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCompetitionSeason(CompetitionSeason $competitionSeason): static
+    {
+        if ($this->competitionSeasons->removeElement($competitionSeason)) {
+            // set the owning side to null (unless already changed)
+            if ($competitionSeason->getSeason() === $this) {
+                $competitionSeason->setSeason(null);
+            }
+        }
 
         return $this;
     }
