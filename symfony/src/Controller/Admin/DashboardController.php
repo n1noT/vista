@@ -10,6 +10,7 @@ use App\Entity\Competition;
 use App\Entity\CompetitionSeason;
 use App\Entity\Season;
 use App\Entity\User;
+use App\Entity\UserPrediction;
 use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminDashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
@@ -36,6 +37,7 @@ class DashboardController extends AbstractDashboardController
         return [
             MenuItem::linkToDashboard('Dashboard', 'fa fa-home'),
             MenuItem::linkToCrud('User', 'fas fa-user', User::class),
+            MenuItem::linkToCrud('User Prediction', 'fas fa-clipboard-list', UserPrediction::class),
             MenuItem::subMenu('Football', 'fa fa-futbol')->setSubItems(
                 [
                     MenuItem::linkToCrud('Season', 'fas fa-calendar', Season::class),

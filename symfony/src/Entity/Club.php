@@ -29,9 +29,16 @@ class Club
     #[ORM\OneToMany(targetEntity: ClubMatchday::class, mappedBy: 'club')]
     private Collection $clubMatchdays;
 
+    /**
+     * @var Collection<int, UserPrediction>
+     */
+    #[ORM\OneToMany(targetEntity: UserPrediction::class, mappedBy: 'club')]
+    private Collection $userPredictions;
+
     public function __construct()
     {
         $this->clubMatchdays = new ArrayCollection();
+        $this->userPredictions = new ArrayCollection();
     }
 
     public function __toString(): string
@@ -92,6 +99,36 @@ class Club
             // set the owning side to null (unless already changed)
             if ($clubMatchday->getClub() === $this) {
                 $clubMatchday->setClub(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, UserPrediction>
+     */
+    public function getUserPredictions(): Collection
+    {
+        return $this->userPredictions;
+    }
+
+    public function addUserPrediction(UserPrediction $userPrediction): static
+    {
+        if (!$this->userPredictions->contains($userPrediction)) {
+            $this->userPredictions->add($userPrediction);
+            $userPrediction->setClub($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserPrediction(UserPrediction $userPrediction): static
+    {
+        if ($this->userPredictions->removeElement($userPrediction)) {
+            // set the owning side to null (unless already changed)
+            if ($userPrediction->getClub() === $this) {
+                $userPrediction->setClub(null);
             }
         }
 

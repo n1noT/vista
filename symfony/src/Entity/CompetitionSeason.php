@@ -38,10 +38,17 @@ class CompetitionSeason
     #[ORM\OneToMany(targetEntity: ClubMatchday::class, mappedBy: 'competitionSeason')]
     private Collection $clubMatchdays;
 
+    /**
+     * @var Collection<int, UserPrediction>
+     */
+    #[ORM\OneToMany(targetEntity: UserPrediction::class, mappedBy: 'competitionSeason')]
+    private Collection $userPredictions;
+
     public function __construct()
     {
         $this->total_matchdays = 20; // Most of the competitions have 20 matchdays so it's set by default
         $this->clubMatchdays = new ArrayCollection();
+        $this->userPredictions = new ArrayCollection();
     }
 
     public function __toString(): string
@@ -114,6 +121,36 @@ class CompetitionSeason
             // set the owning side to null (unless already changed)
             if ($clubMatchday->getCompetitionSeason() === $this) {
                 $clubMatchday->setCompetitionSeason(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, UserPrediction>
+     */
+    public function getUserPredictions(): Collection
+    {
+        return $this->userPredictions;
+    }
+
+    public function addUserPrediction(UserPrediction $userPrediction): static
+    {
+        if (!$this->userPredictions->contains($userPrediction)) {
+            $this->userPredictions->add($userPrediction);
+            $userPrediction->setCompetitionSeason($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserPrediction(UserPrediction $userPrediction): static
+    {
+        if ($this->userPredictions->removeElement($userPrediction)) {
+            // set the owning side to null (unless already changed)
+            if ($userPrediction->getCompetitionSeason() === $this) {
+                $userPrediction->setCompetitionSeason(null);
             }
         }
 

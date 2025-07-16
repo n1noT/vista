@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation\Timestampable;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -47,9 +49,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?bool $isActive = null;
 
+    /**
+     * @var Collection<int, UserPrediction>
+     */
+    #[ORM\OneToMany(targetEntity: UserPrediction::class, mappedBy: 'user')]
+    private Collection $userPredictions;
+
     public function __construct()
     {
         $this->isActive = true;
+        $this->userPredictions = new ArrayCollection();
+    }
+
+    public function __toString(): string
+    {
+        return $this->email ?? 'Unknown User';
     }
 
     public function getId(): ?int
@@ -157,6 +171,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setIsActive(bool $isActive): static
     {
         $this->isActive = $isActive;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, UserPrediction>
+     */
+    public function getUserPredictions(): Collection
+    {
+        return $this->userPredictions;
+    }
+
+    public function addUserPrediction(UserPrediction $userPrediction): static
+    {
+        if (!$this->userPredictions->contains($userPrediction)) {
+            $this->userPredictions->add($userPrediction);
+            $userPrediction->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserPrediction(UserPrediction $userPrediction): static
+    {
+        if ($this->userPredictions->removeElement($userPrediction)) {
+            // set the owning side to null (unless already changed)
+            if ($userPrediction->getUser() === $this) {
+                $userPrediction->setUser(null);
+            }
+        }
 
         return $this;
     }
